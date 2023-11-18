@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Set mac address
+mac="INSERT MAC ADDRESS HERE"
+
+# Initialize an empty array
+devices=()
+
+# Get the output of the command
+command_output=$(ip -br addr | awk '{print $1}')
+
+# Read each line into the array
+while IFS= read -r line; do
+    devices+=("$line")
+done <<< "$command_output"
+
+# Print the elements of the array
+echo $'Select a device to change its MAC address:\n'
+index=1
+for device in "${devices[@]}"; do
+    echo "[$index]" $device
+    index=$((index+1))
+done
+echo $'\n'
+read -p "Enter your choice: " choice
+
+# Check if the choice is valid
+if [ $choice -gt ${#devices[@]} ] || [ $choice -lt 1 ]
+then
+    echo "Invalid choice."
+    exit
+fi
+
+# Get the selected device
+dev=${devices[$((choice-1))]}
+
+# Change the MAC address
+sudo ip link set dev $dev down
+sudo macchanger --mac=$mac $dev > /dev/null
+sudo ip link set dev $dev up
+
+# Finished
+echo "MAC address of $dev changed to $mac."
+exit
