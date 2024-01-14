@@ -2,6 +2,7 @@
 
 # Set mac address
 mac="INSERT MAC ADDRESS HERE"
+ssid="INSERT SSID HERE"
 
 # Initialize an empty array
 devices=()
@@ -38,6 +39,9 @@ dev=${devices[$((choice-1))]}
 sudo ip link set dev $dev down
 sudo macchanger --mac=$mac $dev > /dev/null
 sudo ip link set dev $dev up
+nmcli con modify $ssid connection.interface-name $dev
+nmcli radio wifi off
+nmcli radio wifi on
 
 # Finished
 echo "MAC address of $dev changed to $mac."
