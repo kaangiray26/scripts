@@ -39,9 +39,14 @@ dev=${devices[$((choice-1))]}
 sudo ip link set dev $dev down
 sudo macchanger --mac=$mac $dev > /dev/null
 sudo ip link set dev $dev up
-nmcli con modify $ssid connection.interface-name $dev
-nmcli radio wifi off
-nmcli radio wifi on
+
+# Check if the device is a wireless interface
+if [[ $dev == wlan* ]]
+then
+    nmcli con modify $ssid connection.interface-name $dev
+    nmcli radio wifi off
+    nmcli radio wifi on
+fi
 
 # Finished
 echo "MAC address of $dev changed to $mac."
