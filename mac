@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Set mac address
-mac="INSERT MAC ADDRESS HERE"
-ssid="INSERT SSID HERE"
+mac=<INSERT MAC ADDRESS HERE>
+ssid=<INSERT SSID HERE>
 
 # Initialize an empty array
 devices=()
@@ -43,9 +43,8 @@ sudo ip link set dev $dev up
 # Check if the device is a wireless interface
 if [[ $dev == wlan* ]]
 then
-    nmcli con modify $ssid connection.interface-name $dev
-    nmcli radio wifi off
-    nmcli radio wifi on
+    nmcli con delete <con-name>
+    nmcli con add <connection-info>
 fi
 
 # Finished
